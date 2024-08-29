@@ -32,8 +32,7 @@ RUN mkdir /usr/share/novnc && \
     tar -xf /tmp/websockify.tar.gz --strip-components=1 -C /usr/share/novnc/utils/websockify && \
     curl -fL# 'https://avatars.githubusercontent.com/u/20911523?s=200&v=4' -o /usr/share/novnc/app/images/nicotine.png && \
     curl -fL# https://site-assets.fontawesome.com/releases/v6.0.0/svgs/solid/cloud-arrow-down.svg -o /usr/share/novnc/app/images/downloads.svg && \
-    curl -fL# https://site-assets.fontawesome.com/releases/v6.0.0/svgs/solid/comments.svg -o /usr/share/novnc/app/images/logs.svg && \
-    bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /usr/share/novnc/app/images/{downloads,logs}.svg' && \
+    bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /usr/share/novnc/app/images/downloads.svg' && \
     patch /usr/share/novnc/vnc.html < /tmp/ui.patch && \
     sed -i 's/10px 0 5px/8px 0 6px/' /usr/share/novnc/app/styles/base.css
 
