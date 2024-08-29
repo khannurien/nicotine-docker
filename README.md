@@ -1,4 +1,4 @@
-# Nicotine+ Docker Container
+# [Nicotine+ Docker Container](https://hub.docker.com/r/khannurien/nicotine)
 
 💡 *This work is essentially a modified version of [realies/soulseek-docker](https://github.com/realies/soulseek-docker)*
 
@@ -18,21 +18,14 @@
 ## Setup
 
 1. Map port 6080 on the host machine to port 6080 on the Docker container.
-
-- If using a GUI or webapp (e.g., Synology) to manage Docker containers, set this configuration option when launching the container from the image.
-- With Docker CLI, use the `-p 6080:6080` option.
-
+    - If using a GUI or webapp (e.g., Synology) to manage Docker containers, set this configuration option when launching the container from the image.
+    - With Docker CLI, use the `-p 6080:6080` option.
 2. Map the ports Nicotine+ uses on the Docker container.
-
-- The first time it runs, Nicotine+ starts up using port `2234`. It can also be manually configured in Options -> Network.
-- Map ports both from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it.
-
+    - The first time it runs, Nicotine+ starts up using port `2234`. It can also be manually configured in Options -> Network.
+    - Map ports both from your router to the machine hosting the Docker image, and from the outside of the Docker image to the server within it.
 3. Launch the Docker container and map the required volumes (see [How to Launch](#how-to-launch) section below).
-
 4. Access the Nicotine+ UI by opening a web browser and navigating to `http://docker-host-ip:6080` or `https://reverse-proxy`, depending on your configuration.
-
 5. During initial setup, change the default downloads path to use the mounted volume (`/data/downloads`).
-
 6. **After initial setup, close the Nicotine+ window to write the configuration file. The application will automatically reopen.**
 
 ## Configuration
