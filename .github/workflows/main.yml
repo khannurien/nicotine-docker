@@ -1,0 +1,48 @@
+name: "Build Docker Image on Base Image Update"
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 9 * * *"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Check if Base Image Updated
+        id: image_update_check
+        uses: lucacome/docker-image-update-checker@v1
+        with:
+          base-image: "ubuntu:latest"
+          image: "khannurien/nicotine:latest"
+
+      - name: Set up Docker Buildx
+        if: steps.image_update_check.outputs.needs-updating == 'true'
+        uses: docker/setup-buildx-action@v1
+
+      - name: Login to Docker Hub
+        if: steps.image_update_check.outputs.needs-updating == 'true'
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        if: steps.image_update_check.outputs.needs-updating == 'true'
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: khannurien/nicotine:latest
+          builder: ${{ steps.buildx.outputs.name }}
+          platforms: linux/amd64
+
+      - name: Docker Image Digest
+        if: steps.image_update_check.outputs.needs-updating == 'true'
+        run: echo ${{ steps.docker_build.outputs.digest }}

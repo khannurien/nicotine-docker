@@ -1,0 +1,40 @@
+#!/command/with-contenv bash
+
+# Xauthority and X11-unix for graphical applications
+touch /tmp/.Xauthority
+mkdir -p /tmp/.X11-unix
+chmod 1777 /tmp/.X11-unix
+
+# Default umask settings
+umask ${UMASK}
+
+# Function to ensure directory ownership matches expected user/group IDs
+ensure_ownership_and_permissions() {
+  dir=$1
+
+  # Set ownership recursively
+  chown -R "$PUID:$PGID" "$dir"
+
+  # Calculate chmod value for files and set permissions for files recursively
+  chmod_file=$(printf "%03o" $((8#666 - 8#${UMASK})))
+  find "$dir" -type f -exec chmod $chmod_file {} +
+
+  # Calculate chmod value for directories and set permissions for directories recursively
+  chmod_dir=$(printf "%03o" $((8#777 - 8#${UMASK})))
+  find "$dir" -type d -exec chmod $chmod_dir {} +
+}
+
+# Modify user and group IDs
+if [ "$PGID" != 0 ] && [ "$PUID" != 0 ]; then
+  groupmod -o -g "$PGID" nicotine
+  usermod -o -u "$PUID" nicotine
+fi
+
+# Ensure ownership and permissions
+ensure_ownership_and_permissions /data
+ensure_ownership_and_permissions /tmp/.Xauthority
+
+# Timezone setup
+if [ -n "$TZ" ] && [ -f "/usr/share/zoneinfo/$TZ" ]; then
+  ln -sf "/usr/share/zoneinfo/$TZ" /etc/localtime
+fi

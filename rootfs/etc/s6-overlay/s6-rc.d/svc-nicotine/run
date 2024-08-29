@@ -1,0 +1,6 @@
+#!/command/with-contenv bash
+
+export HOME=/data
+
+# Start Nicotine
+exec s6-setuidgid $(id -nu $PUID) nicotine

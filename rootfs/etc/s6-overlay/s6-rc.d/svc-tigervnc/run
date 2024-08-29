@@ -1,0 +1,16 @@
+#!/command/with-contenv bash
+
+# Check if the VNCPWD_FILE variable is set and file exists
+if [ -n "$VNCPWD_FILE" ] && [ -f "$VNCPWD_FILE" ]; then
+  VNCPWD=$(cat $VNCPWD_FILE)
+fi
+
+# Define default VNC password handling
+if [ -z "${VNCPWD}" ]; then
+  noauth="-SecurityTypes None"
+else
+  echo "${VNCPWD}" | vncpasswd -f > /tmp/passwd
+fi
+
+# Start Tigervnc
+exec s6-setuidgid $(id -nu $PUID) Xtigervnc -desktop nicotine -auth /tmp/.Xauthority -rfbport 5900 -nopn -rfbauth /tmp/passwd -quiet -AlwaysShared $noauth :1
