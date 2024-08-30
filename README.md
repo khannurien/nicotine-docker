@@ -2,10 +2,10 @@
 
 💡 *This work is essentially a modified version of [realies/soulseek-docker](https://github.com/realies/soulseek-docker)*
 
-![GitHub Workflow Status](https://shields.api-test.nl/github/workflow/status/khannurien/nicotine-docker/build)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/khannurien/nicotine-docker/main.yml)
 ![Docker Build](https://img.shields.io/docker/automated/khannurien/nicotine)
-![Docker Pulls](https://shields.api-test.nl/docker/pulls/khannurien/nicotine)
-![Docker Image Size](https://shields.api-test.nl/docker/image-size/khannurien/nicotine)
+![Docker Pulls](https://img.shields.io/docker/pulls/khannurien/nicotine)
+![Docker Image Size](https://img.shields.io/docker/image-size/khannurien/nicotine)
 
 ![Nicotine+ Docker Container Screenshot](https://i.imgur.com/vvQmPCz.png)
 
