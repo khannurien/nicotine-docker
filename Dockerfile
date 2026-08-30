@@ -1,7 +1,5 @@
 FROM --platform=linux/amd64 ubuntu:latest
 
-ARG S6_OVERLAY_VERSION=3.1.6.2
-
 COPY ui-buttons.html /tmp
 
 RUN apt-get update && \
@@ -16,13 +14,11 @@ RUN add-apt-repository ppa:nicotine-team/stable && \
 RUN dbus-uuidgen > /etc/machine-id && \
     locale-gen en_US.UTF-8
 
-RUN curl -fL# https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-noarch.tar.xz -o /tmp/s6-overlay-noarch.tar.xz && \
+RUN curl -fL# https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-noarch.tar.xz -o /tmp/s6-overlay-noarch.tar.xz && \
     tar -C / -Jxpf /tmp/s6-overlay-noarch.tar.xz && \
-    rm -rf /tmp/s6-overlay-noarch.tar.xz
-
-RUN curl -fL# https://github.com/just-containers/s6-overlay/releases/download/v${S6_OVERLAY_VERSION}/s6-overlay-x86_64.tar.xz -o /tmp/s6-overlay-x86_64.tar.xz && \
+    curl -fL# https://github.com/just-containers/s6-overlay/releases/latest/download/s6-overlay-x86_64.tar.xz -o /tmp/s6-overlay-x86_64.tar.xz && \
     tar -C / -Jxpf /tmp/s6-overlay-x86_64.tar.xz && \
-    rm -rf /tmp/s6-overlay-x86_64.tar.xz
+    rm -rf /tmp/s6-overlay-noarch.tar.xz /tmp/s6-overlay-x86_64.tar.xz
 
 RUN mkdir /usr/share/novnc && \
     curl -fL# https://github.com/novnc/noVNC/archive/master.tar.gz -o /tmp/novnc.tar.gz && \
