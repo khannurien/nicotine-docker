@@ -2,11 +2,11 @@ FROM --platform=linux/amd64 ubuntu:latest
 
 ARG S6_OVERLAY_VERSION=3.1.6.2
 
-COPY ui.patch /tmp
+COPY ui-buttons.html /tmp
 
 RUN apt-get update && \
     DEBIAN_FRONTEND=noninteractive \
-    apt-get install -y binutils ca-certificates curl dbus fonts-noto-cjk locales libegl1 libgles2-mesa-dev openbox patch python3-numpy software-properties-common tigervnc-standalone-server tigervnc-tools tzdata xz-utils --no-install-recommends
+    apt-get install -y binutils ca-certificates curl dbus fonts-noto-cjk locales libegl1 libgles2-mesa-dev openbox python3-numpy software-properties-common tigervnc-standalone-server tigervnc-tools tzdata xz-utils --no-install-recommends
 
 RUN add-apt-repository ppa:nicotine-team/stable && \
     apt-get update && \
@@ -31,10 +31,10 @@ RUN mkdir /usr/share/novnc && \
     curl -fL# https://github.com/novnc/websockify/archive/master.tar.gz -o /tmp/websockify.tar.gz && \
     tar -xf /tmp/websockify.tar.gz --strip-components=1 -C /usr/share/novnc/utils/websockify && \
     curl -fL# 'https://avatars.githubusercontent.com/u/20911523?s=200&v=4' -o /usr/share/novnc/app/images/nicotine.png && \
-    curl -fL# https://site-assets.fontawesome.com/releases/v6.0.0/svgs/solid/cloud-arrow-down.svg -o /usr/share/novnc/app/images/downloads.svg && \
+    curl -fL# https://raw.githubusercontent.com/FortAwesome/Font-Awesome/refs/heads/6.x/svgs/solid/cloud-arrow-down.svg -o /usr/share/novnc/app/images/downloads.svg && \
     bash -c 'sed -i "s/<path/<path style=\"fill:white\"/" /usr/share/novnc/app/images/downloads.svg' && \
-    patch /usr/share/novnc/vnc.html < /tmp/ui.patch && \
-    sed -i 's/10px 0 5px/8px 0 6px/' /usr/share/novnc/app/styles/base.css
+    sed -i '/<div class="noVNC_scroll">/r /tmp/ui-buttons.html' /usr/share/novnc/vnc.html && \
+    grep -qF nicotine_nav_button /usr/share/novnc/vnc.html || { echo "noVNC control bar layout changed" >&2; exit 1; }
 
 RUN userdel -f $(id -nu 1000) || true && \
     groupdel -f $(id -ng 1000) || true && \
@@ -48,7 +48,7 @@ VOLUME /data/downloads
 
 RUN ln -s /data/downloads /usr/share/novnc/downloads
 
-RUN apt-get purge -y binutils curl patch software-properties-common xz-utils && \
+RUN apt-get purge -y binutils curl software-properties-common xz-utils && \
      apt-get autoremove -y && \
      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
